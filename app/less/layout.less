@@ -1,0 +1,69 @@
+html, body {
+	margin : 0rem;
+	padding: 0rem;
+	height: 100%;
+}
+section.screen {
+	display: grid;
+	width: 100%;
+	height : 100%;
+
+	grid-template-columns: 15rem auto;
+	grid-template-rows: 2rem auto 2rem 2rem;
+	grid-template-areas:
+	"title  channel-header"
+	"nav    contents"
+	"nav    input-box"
+	"footer footer";
+	justify-items: stretch;
+}
+section.title {
+	grid-area: title;
+
+	display: flex;
+	flex-flow: row nowrap;
+
+	h1 {
+		flex-grow: 1;
+	}
+}
+
+section.channel-list {
+	grid-area: nav;
+	display: flex;
+	flex-flow: column nowrap;
+
+	zumo-channel-list {
+		flex-grow: 1;
+	}
+}
+section.channel-header {
+	grid-area: channel-header;
+
+	display: flex;
+	flex-flow: row nowrap;
+
+	h2 {
+		flex-grow: 1;
+	}
+}
+section.contents {
+	grid-area: contents;
+}
+section.input-box {
+	grid-area: input-box;
+	display: flex;
+	zumo-input-box {
+		flex-grow: 1;
+	}
+}
+section.footer {
+	grid-area: footer;
+}
+
+zumo-message-box {
+	position: fixed;
+	width: 20rem;
+	top: 2.5rem;
+	right: 1rem;
+}

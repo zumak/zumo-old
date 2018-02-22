@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Zumo - main page</title>
+		<link rel="stylesheet" href="/static/css/main.css" />
+
+		<link rel="import" href="/static/html/components/dialog.html" />
+		<link rel="import" href="/static/html/components/menu.html" />
+		<link rel="import" href="/static/html/components/channel-list.html" />
+		<link rel="import" href="/static/html/components/message-box.html" />
+		<link rel="import" href="/static/html/components/input-box.html" />
+		<link rel="import" href="/static/html/components/socket.html" />
+	</head>
+	<body>
+		<section class="screen">
+			<section class="title">
+				<h1>Zumo</h1>
+				<zumo-menu>
+					<button slot="button">+</button>
+					<section slot="menu">
+						<button name="create-bot">Create Bot</button>
+						<button name="my-profile">My Profile</button>
+						<button name="register-token">Regitster Token</button>
+					</section>
+				</zumo-menu>
+			</section>
+			<section class="channel-list">
+				<button class="create-channel">Create channel</button>
+				<button class="join-channel">Join channel</button>
+				<zumo-channel-list></zumo-channel-list>
+				<button class="logout">Log out(switch other user)</button>
+			</section>
+			<section class="channel-header">
+				<h2>Channel Title</h2>
+				<zumo-menu class="channel">
+					<button slot="button">*</button>
+					<section slot="menu">
+						<button name="invite">Invite</button>
+						<button name="kick">Kick</button>
+						<button name="leave">Leave</button>
+						<button name="hook-create">Create Hook</button>
+					</section>
+				</zumo-menu>
+			</section>
+			<section class="messages">
+			</section>
+			<section class="input-box">
+				<zumo-input-box></zumo-input-box>
+			</section>
+			<section class="footer">
+				Zumo. made by <a href="https://wikinote.bluemir.me/profile">Bluemir</a>
+			</section>
+		</section>
+		<aside>
+			<zumo-message-box></zumo-message-box>
+			<zumo-dialog class="create-bot">
+				<h2 slot="title">Create Bot</h2>
+				<section slot="body">
+					<input name="name"   type="text" placeholder="Name" />
+					<input name="driver" type="text" placeholder="Driver" />
+				</section>
+			</zumo-dialog>
+			<zumo-dialog class="create-channel">
+				<h2 slot="title">Create Channel</h2>
+				<section slot="body">
+					<input name="name" type="text" placeholder="Channel Name" />
+				</section>
+			</zumo-dialog>
+			<zumo-dialog class="join-channel">
+				 <h2 slot="title">Join Channel</h2>
+				 <section slot="body">
+					 <select></select>
+				 </section>
+			</zumo-dialog>
+			<zumo-socket endpoint="/ws"></zumo-socket>
+		</aside>
+		<script type="module" src="/static/js/main.js"></script>
+	</body>
+</html>

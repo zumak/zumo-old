@@ -1,0 +1,90 @@
+<template>
+	<style>
+	@import url("/static/css/color.css");
+
+	:host {
+	}
+	:host ul {
+		list-style: none;
+		margin: 0px;
+		padding: 0px;
+	}
+	:host ul li {
+		margin: 0px;
+		padding: 0px;
+
+		display: flex;
+		flex-flow: row nowrap;
+	}
+	:host ul li span {
+		flex-grow: 1;
+	}
+	</style>
+	<ul>
+	</ul>
+</template>
+<script>
+(function(template){
+	class ZumoChannelList extends HTMLElement {
+		constructor() {
+			// this   mean outside of shadow dom
+			// shadow mean inside  of shadow dom
+			super();
+
+			var that = this;
+			var clone = document.importNode(template.content, true)
+			var shadow = this["--shadow"] = this.attachShadow({mode: 'open'})
+			shadow.appendChild(clone);
+
+			// Add click event
+		}
+		async load() {
+			var res = await $.request("GET", "/api/v1/users/me/joinned-channel");
+			var channels = res.json.sort(function(a, b){
+				if (a.Name === b.Name) {
+					return 0;
+				}
+				return a.Name > b.Name ? 1 : -1;
+			});
+
+			this.clear();
+
+			var that = this;
+			var shadow = this["--shadow"];
+			channels.map(function(e){
+				var item = $.create("li", {
+					$html: `<span>${e.Name}</span>`,
+				});
+
+				var leave = $.create("button", {
+					class: "leave",
+					$text: "X",
+				});
+
+				leave.on("click", that._clickLeave.bind(that, e));
+				item.on("click", that._clickName.bind(that, e));
+
+				item.append(leave);
+
+				return item;
+			}).forEach(function(e) {
+				$.get(shadow, "ul").appendChild(e);
+			});
+		}
+		_clickLeave(channel) {
+			console.log(channel)
+			// request
+		}
+		_clickName(channel, e) {
+			var event = new CustomEvent("change-channel", {
+				detail: channel,
+			});
+			this.dispatchEvent(event);
+
+			// TODO select css
+		}
+	}
+
+	customElements.define("zumo-channel-list", ZumoChannelList);
+})(document.currentScript.ownerDocument.querySelector('template'))
+</script>

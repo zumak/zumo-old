@@ -1,0 +1,79 @@
+<template>
+	<style>
+	@import url("/static/css/color.css");
+
+	:host {
+		position: absolute;
+		display: none;
+		background: var(--default-background);
+		color: var(--default-foreground);
+		border: 2px solid green;
+		padding: 1rem;
+	}
+	:host(.show) {
+		display: block;
+
+		top: 1rem;
+		left: 1rem;
+	}
+	.title {
+		border: none;
+	}
+
+	</style>
+	<slot name="title"></slot>
+	<form>
+		<slot name="body"></slot>
+		<button class="ok"     type="submit">OK    </button>
+		<button class="cancel" type="reset" >Cancel</button>
+	</form>
+</template>
+<script>
+(function(template){
+	class ZumoDialog extends HTMLElement {
+		constructor() {
+			super();
+
+			var clone = document.importNode(template.content, true)
+			var shadow = this["--shadow"] = this.attachShadow({mode: 'open'})
+			shadow.appendChild(clone);
+
+			shadow.addEventListener("submit", this._submit.bind(this));
+			shadow.addEventListener("reset", this._cancel.bind(this));
+			//shadow.querySelector(".cancel").addEventListener("click",  this._cancel.bind(this));
+		}
+
+		_submit(evt) {
+			console.debug("[zumo-dialog:_submit]");
+			evt.preventDefault();
+
+			var event = new CustomEvent('ok', {});
+
+			this.dispatchEvent(event);
+		}
+		_cancel(evt) {
+			console.debug("[zumo-dialog:_reset]");
+			evt.preventDefault();
+
+			var event = new CustomEvent('cancel', {});
+
+			this.dispatchEvent(event);
+		}
+
+		show() {
+			var event = new CustomEvent("show", {});
+			this.dispatchEvent(event);
+
+			this.classList.add("show");
+		}
+		hide() {
+			this.classList.remove("show");
+		}
+		toggle() {
+			this.classList.toggle("show");
+		}
+	}
+	//document.registerElement('zumo-dialog', ZumoDialog);
+	customElements.define("zumo-dialog", ZumoDialog);
+})(document.currentScript.ownerDocument.querySelector('template'))
+</script>

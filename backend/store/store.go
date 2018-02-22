@@ -18,7 +18,7 @@ type Store interface {
 	GetUser(username string) (*datatypes.User, error) // Must return nil if not exist
 	PutUser(user *datatypes.User) (*datatypes.User, error)
 
-	GetToken(username, hashedKey string) (*datatypes.Token, error)
+	//GetToken(username, hashedKey string) (*datatypes.Token, error)
 	FindToken(username string) ([]datatypes.Token, error)
 	PutToken(token *datatypes.Token) (*datatypes.Token, error)
 

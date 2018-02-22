@@ -12,6 +12,9 @@ func (b *backend) Join(channelID, username string) error {
 		return err
 	}
 	// TODO  duplicate check
+	if channel.Member == nil {
+		channel.Member = map[string]struct{}{}
+	}
 	channel.Member[username] = struct{}{}
 
 	_, err = b.Store.PutChannel(channel) // maybe need hint?

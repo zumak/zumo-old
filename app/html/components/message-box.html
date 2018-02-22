@@ -1,0 +1,80 @@
+<template>
+	<style>
+	@import url("/static/css/color.css");
+
+	:host {
+	}
+	:host div {
+		border: 1px solid var(--layout-line-color);
+		background: var(--default-background);
+
+		animation-delay: 2s;
+		animation-duration: 3s;
+
+		animation-name: fadeout;
+		padding: 1rem;
+	}
+	:host .info {
+		/* default */
+	}
+	:host .warn {
+		color: var(--warning-foreground);
+		background: var(--warning-background);
+	}
+	:host .error {
+		color: var(--error-foreground);
+		background: var(--error-background);
+	}
+	@keyframes fadeout {
+		from {
+			opacity: 1.0;
+		}
+		to {
+			opacity: 0.0;
+		}
+	}
+
+	</style>
+	<!-- blank -->
+</template>
+<script>
+(function(template){
+	class ZumoMessageBox extends HTMLElement {
+		constructor() {
+			// this   mean outside of shadow dom
+			// shadow mean inside  of shadow dom
+			super();
+
+			var that = this;
+			var clone = document.importNode(template.content, true)
+			var shadow = this["--shadow"] = this.attachShadow({mode: 'open'})
+			shadow.appendChild(clone);
+		}
+		info(str) {
+			this._makeBox("info", str);
+		}
+		warn(str) {
+			this._makeBox("warn", str);
+		}
+		error(str) {
+			this._makeBox("error", str)
+		}
+		_makeBox(level, text) {
+			var box = $.create("div", {
+				class: level,
+				$text: text,
+			});
+
+			box.on("animationstart", function() {
+
+			})
+			box.on("animationend", function(){
+				box.remove();
+			});
+
+			this["--shadow"].appendChild(box);
+		}
+	}
+	customElements.define("zumo-message-box", ZumoMessageBox);
+})(document.currentScript.ownerDocument.querySelector('template'))
+</script>

@@ -1,0 +1,65 @@
+<link rel="import" href="/static/html/components/menu.html" />
+
+<template>
+	<style>
+	@import url("/static/css/color.css");
+
+	:host {
+		display: flex;
+		flex-flow: row nowrap;
+	}
+	:host .status {
+		margin: 0px;
+		padding: 0px;
+	}
+	:host .status li {
+		display: none;
+	}
+	:host input[name=text] {
+		flex-grow: 1;
+	}
+	</style>
+	<!-- blank -->
+
+	<zumo-menu>
+		<button slot="button">+</button>
+		<section slot="menu">
+			<button name="add-link">Add Link</button>
+			<button name="add-location">Add Location</button>
+		</section>
+	</zumo-menu>
+	<ul class="status">
+		<li class="location">L</li>
+		<li class="detail">D</li>
+	</ul>
+	<input type="text" name="text" />
+	<button type="submit">Send</button>
+
+</template>
+<script>
+(function(template){
+	class ZumoInputBox extends HTMLElement {
+		constructor() {
+			// this   mean outside of shadow dom
+			// shadow mean inside  of shadow dom
+			super();
+
+			var clone = document.importNode(template.content, true)
+			var shadow = this["--shadow"] = this.attachShadow({mode: 'open'})
+			shadow.appendChild(clone);
+		}
+		_send() {
+			var channelID = this.attr("channel-id");
+			var text = $.get(this["--shadow"], "input[name=text]").value;
+
+			$.request("PUT",`/api/v1/channels/${channelID}/messages`, {
+				body: {
+					Text: text,
+					Detail: {},
+				}
+			});
+		}
+	}
+	customElements.define("zumo-input-box", ZumoInputBox);
+})(document.currentScript.ownerDocument.querySelector('template'))
+</script>

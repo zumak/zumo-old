@@ -16,14 +16,14 @@ JS_SOURCES = $(shell find app/js -type f -name '*.js' -print)
 HTML_SOURCES = $(shell find app/html -type f -name '*.html' -print)
 CSS_SOURCES = $(shell find app/less -type f -name "*.less" -print)
 WEB_LIBS = $(shell find app/lib -type f -type f -print)
+_CSS_ENTRY_ = $(shell find app/less/entry -type f -name "*.less" -print)
 
 DISTS += $(HTML_SOURCES:app/html/%=dist/html/%)
 DISTS += $(JS_SOURCES:app/js/%=dist/js/%)
-DISTS += dist/css/common.css
+DISTS += $(_CSS_ENTRY_:app/less/entry/%.less=dist/css/%.css)
 DISTS += $(WEB_LIBS:app/lib/%=dist/lib/%)
 
 # Automatic runner
-
 DIRS = $(shell find . \
 	   -name ".git" -prune -o \
 	   -name ".GOPATH" -prune -o \
@@ -65,8 +65,8 @@ $(BIN_NAME): $(BIN_NAME).bin $(DISTS)
 	@echo Embed resources DONE
 
 ## Web dist
-dist/css/common.css: $(CSS_SOURCES)
-	lessc app/less/main.less $@
+dist/css/%.css: $(CSS_SOURCES)
+	lessc app/less/entry/$*.less $@
 dist/%: app/%
 	@mkdir -p $(basename $@)
 	cp $< $@

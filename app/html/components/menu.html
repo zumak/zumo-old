@@ -1,0 +1,96 @@
+<!--
+
+<zumo-menu id="channel-menu">
+	<button slot="button">channel menu</button>
+	<section slot="menu">
+		<button name="open-kick-dialog">Kick</button>
+		<button name="leave">Leave</button>
+	</section>
+</zumo-menu>
+$.get("zumo-menu#channel-menu").on("leave", function(){
+	// Do leave ops
+})
+-->
+
+<template>
+	<style>
+	@import url("/static/css/color.css");
+
+	:host {
+		position: relative;
+		display: flex;
+	}
+	:host ul {
+		display: none;
+
+		position: absolute;
+		right: 0rem;
+		top: 100%;
+
+		background: var(--default-background);
+		color: var(--default-foreground);
+		border: 2px solid var(--layout-line-color);
+
+		list-style: none;
+		padding: 0.5rem;
+		margin: 0rem;
+	}
+	ul.show {
+		display: block;
+	}
+
+	li {
+		white-space: nowrap;
+	}
+
+	</style>
+	<slot name="button"></slot>
+	<ul>
+		<!-- Slot for item -->
+	</ul>
+</template>
+<script>
+(function(template){
+	class ZumoMenu extends HTMLElement {
+		constructor() {
+			// this   mean outside of shadow dom
+			// shadow mean inside  of shadow dom
+			super();
+
+			var that = this;
+			var clone = document.importNode(template.content, true)
+			var shadow = this["--shadow"] = this.attachShadow({mode: 'open'})
+			shadow.appendChild(clone);
+
+			shadow.querySelector("slot[name=button]").addEventListener("click", this.toggle.bind(this));
+
+
+			var ul = shadow.querySelector("ul");
+			[].forEach.call(this.querySelectorAll("[slot=menu] *"), function(el) {
+				var li = document.createElement("li");
+				li.appendChild(el);
+
+				// add event
+				el.addEventListener("click", handler.bind(that, el.getAttribute("name")))
+
+				ul.appendChild(li);
+			});
+		}
+		toggle() {
+			this["--shadow"].querySelector("ul").classList.toggle("show")
+		}
+		hide() {
+			this["--shadow"].querySelector("ul").classList.remove("show")
+		}
+	}
+	customElements.define("zumo-menu", ZumoMenu);
+
+	function handler(name,  evt){
+		var event = new CustomEvent("menu",  {
+			detail: { name: name }
+		});
+		this.dispatchEvent(event);
+		evt.preventDefault();
+	}
+})(document.currentScript.ownerDocument.querySelector('template'))
+</script>

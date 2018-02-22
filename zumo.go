@@ -34,7 +34,7 @@ func Run() {
 
 	log.Info("load complete, %+v", conf)
 
-	_, err = backend.New(&conf.Backend)
+	b, err := backend.New(&conf.Backend)
 	if err != nil {
 		log.Err(err)
 		return
@@ -43,7 +43,7 @@ func Run() {
 	log.Info("Init backend")
 
 	// load core
-	if err := server.Run(&conf.Server); err != nil {
+	if err := server.Run(&conf.Server, b); err != nil {
 		if err != nil {
 			log.Err(err)
 		}
