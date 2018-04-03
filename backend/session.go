@@ -1,6 +1,10 @@
 package backend
 
-import "io"
+import (
+	"io"
+
+	"github.com/zumak/zumo/utils/log"
+)
 
 func (b *backend) OpenSession(username string, agent Agent) error {
 	id, err := b.agents.Register(username, agent)
@@ -15,8 +19,10 @@ func (b *backend) OpenSession(username string, agent Agent) error {
 		if err != nil {
 			if err == io.EOF {
 				// just end
+				log.Warn("connection closed")
 				return nil
 			}
+			log.Error("%s", err.Error())
 			return err
 		}
 		//

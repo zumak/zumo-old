@@ -7,6 +7,7 @@ import (
 
 	"github.com/coreos/etcd/clientv3"
 	"github.com/zumak/zumo/datatypes"
+	"github.com/zumak/zumo/utils/log"
 )
 
 func (s *Store) FindMessages(channelID string, limit int) ([]datatypes.Message, error) {
@@ -32,6 +33,7 @@ func (s *Store) FindMessages(channelID string, limit int) ([]datatypes.Message, 
 	return result, nil
 }
 func (s *Store) PutMessage(channelID string, msg *datatypes.Message) (*datatypes.Message, error) {
+	log.Debug("%s %+v", channelID, msg)
 	str, err := json.Marshal(msg)
 	if err != nil {
 		return nil, err

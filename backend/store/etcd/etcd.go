@@ -75,7 +75,7 @@ func watchInit(cli clientv3.Watcher, emmiter *store.EventEmitter) {
 
 		case res := <-msgCh:
 			for _, ev := range res.Events {
-				log.Debug("channel changed %s %q", ev.Type, ev.Kv.Key)
+				log.Debug("message appended %s %q", ev.Type, ev.Kv.Key)
 				if ev.Type == clientv3.EventTypePut {
 					msg := &datatypes.Message{}
 					err := json.Unmarshal(ev.Kv.Value, msg)

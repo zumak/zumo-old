@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 
 	"github.com/gin-gonic/gin"
-	"github.com/zumak/zumo/datatypes"
 	"golang.org/x/net/websocket"
+
+	"github.com/zumak/zumo/datatypes"
+	"github.com/zumak/zumo/utils/log"
 )
 
 type translater struct {
@@ -14,6 +16,7 @@ type translater struct {
 }
 
 func (t *translater) OnMessage(channelID string, msg datatypes.Message) {
+	log.Debug("%s %+v", channelID, msg)
 	t.encoder.Encode(struct {
 		*datatypes.Message
 		Type      string

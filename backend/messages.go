@@ -6,6 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/zumak/zumo/datatypes"
+	"github.com/zumak/zumo/utils/log"
 )
 
 func (b *backend) GetMessages(channelID string, limit int) ([]datatypes.Message, error) {
@@ -16,6 +17,7 @@ func (b *backend) GetMessages(channelID string, limit int) ([]datatypes.Message,
 	return messages, nil
 }
 func (b *backend) AppendMessage(username, channelID, text string, detail json.RawMessage) (*datatypes.Message, error) {
+	log.Debug("%s:%s %s", username, channelID, text)
 	channel, err := b.Store.GetChannel(channelID)
 	if err != nil || channel == nil {
 		return nil, errors.New("channel not found")

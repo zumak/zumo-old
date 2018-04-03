@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/zumak/zumo/datatypes"
+	"github.com/zumak/zumo/utils/log"
 )
 
 type Agent interface {
@@ -31,8 +32,9 @@ func (am *AgentManager) Register(username string, agent Agent) (string, error) {
 	return am.agents[username].Register(agent)
 }
 func (am *AgentManager) Unregister(username, id string) error {
+	log.Debug("unregister: %s %s", username, id)
 	am.Lock()
-	defer am.Lock()
+	defer am.Unlock()
 	if am.agents[username] == nil {
 		return errors.New("not found agent")
 	}
