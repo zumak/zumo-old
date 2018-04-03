@@ -3,6 +3,7 @@
 <template>
 	<style>
 	@import url("/static/css/color.css");
+	@import url("/static/css/reset.css");
 
 	:host {
 		display: flex;
@@ -14,6 +15,11 @@
 	}
 	:host .status li {
 		display: none;
+	}
+	:host form {
+		display: flex;
+		flex-flow: row nowrap;
+		flex-grow: 1;
 	}
 	:host input[name=text] {
 		flex-grow: 1;
@@ -32,9 +38,10 @@
 		<li class="location">L</li>
 		<li class="detail">D</li>
 	</ul>
-	<input type="text" name="text" />
-	<button type="submit">Send</button>
-
+	<form>
+		<input type="text" name="text" />
+		<button type="submit">Send</button>
+	</form>
 </template>
 <script>
 (function(template){
@@ -47,12 +54,15 @@
 			var clone = document.importNode(template.content, true)
 			var shadow = this["--shadow"] = this.attachShadow({mode: 'open'})
 			shadow.appendChild(clone);
+
+			var that = this;
+			$.get(shadow, "form").on("submit", $.prevent(this._send.bind(this)))
 		}
 		_send() {
 			var channelID = this.attr("channel-id");
 			var text = $.get(this["--shadow"], "input[name=text]").value;
 
-			$.request("PUT",`/api/v1/channels/${channelID}/messages`, {
+			$.request("POST",`/api/v1/channels/${channelID}/messages`, {
 				body: {
 					Text: text,
 					Detail: {},

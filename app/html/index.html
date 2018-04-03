@@ -4,18 +4,24 @@
 		<title>Zumo - main page</title>
 		<link rel="stylesheet" href="/static/css/main.css" />
 
+		<script src="/static/js/minilib.js"></script>
+		<!--script type="module">
+			import $ from "/static/js/minilib.js";
+			$._registerGlobal(); // load lib first, for custom element
+		</script-->
 		<link rel="import" href="/static/html/components/dialog.html" />
 		<link rel="import" href="/static/html/components/menu.html" />
 		<link rel="import" href="/static/html/components/channel-list.html" />
 		<link rel="import" href="/static/html/components/message-box.html" />
 		<link rel="import" href="/static/html/components/input-box.html" />
 		<link rel="import" href="/static/html/components/socket.html" />
+		<link rel="import" href="/static/html/components/messages.html" />
 	</head>
 	<body>
 		<section class="screen">
 			<section class="title">
 				<h1>Zumo</h1>
-				<zumo-menu>
+				<zumo-menu class="application">
 					<button slot="button">+</button>
 					<section slot="menu">
 						<button name="create-bot">Create Bot</button>
@@ -43,6 +49,7 @@
 				</zumo-menu>
 			</section>
 			<section class="messages">
+				<zumo-messages></zumo-messages>
 			</section>
 			<section class="input-box">
 				<zumo-input-box></zumo-input-box>

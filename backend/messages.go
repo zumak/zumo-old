@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/zumak/zumo/datatypes"
 )
 
@@ -15,7 +16,10 @@ func (b *backend) GetMessages(channelID string, limit int) ([]datatypes.Message,
 	return messages, nil
 }
 func (b *backend) AppendMessage(username, channelID, text string, detail json.RawMessage) (*datatypes.Message, error) {
-
+	channel, err := b.Store.GetChannel(channelID)
+	if err != nil || channel == nil {
+		return nil, errors.New("channel not found")
+	}
 	msg := &datatypes.Message{
 		Sender: username,
 		Text:   text,

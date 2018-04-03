@@ -50,7 +50,7 @@ reset:
 
 ## Binary build
 $(BIN_NAME).bin: $(GOPATH)/src/$(IMPORT_PATH) $(GO_SOURCES)
-	#go get -v -d $(IMPORT_PATH)            # can replace with glide
+	go get -v -d $(IMPORT_PATH)            # can replace with glide
 	go build -v \
 		-ldflags "-X main.VERSION=$(VERSION)" \
 		-ldflags "-extldflags -static" \
@@ -82,5 +82,24 @@ $(GOPATH)/src/$(IMPORT_PATH):
 	@echo "make symbolic link on $(GOPATH)/src/$(IMPORT_PATH)..."
 	@mkdir -p $(dir $(GOPATH)/src/$(IMPORT_PATH))
 	ln -s $(PWD) $(GOPATH)/src/$(IMPORT_PATH)
+
+## Multi platform
+deploy: build/linux/amd64/$(BIN_NAME)
+deploy: build/linux/arm/$(BIN_NAME)
+deploy: build/windows/amd64/$(BIN_NAME)
+#deploy: build/windows/arm/$(BIN_NAME)
+# make hook.mk file for your hook (example. following lines)
+deploy:
+	# TODO scp or upload binary
+	# TODO call hook to deploy(ex. docker command)
+
+build/%/$(BIN_NAME): export GOOS=$(subst /,,$(dir $*))
+build/%/$(BIN_NAME): export GOARCH=$(notdir $*)
+build/%/$(BIN_NAME):
+	@echo --------------------------BUILD $$GOOS $$GOARCH-----------------------------
+	make clean
+	make $(BIN_NAME)
+	mkdir -p $(@D)
+	mv $(BIN_NAME) $@
 
 .PHONY: .sources run auto-run reset tools clean

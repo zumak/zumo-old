@@ -45,7 +45,6 @@
 			// shadow mean inside  of shadow dom
 			super();
 
-			var that = this;
 			var clone = document.importNode(template.content, true)
 			var shadow = this["--shadow"] = this.attachShadow({mode: 'open'})
 			shadow.appendChild(clone);

@@ -3,6 +3,7 @@ package backend
 import (
 	"encoding/json"
 
+	"github.com/sirupsen/logrus"
 	"github.com/zumak/zumo/backend/store"
 	"github.com/zumak/zumo/datatypes"
 	"github.com/zumak/zumo/utils/log"
@@ -59,13 +60,13 @@ func New(conf *Config) (Backend, error) {
 		return nil, err
 	}
 
-	go runDispatcher(reciver)
-
 	am := &AgentManager{
 		agents: map[string]AgentList{},
 	}
+	b := &backend{s, am}
+	go b.runDispatcher(reciver)
 
-	return &backend{s, am}, nil
+	return b, nil
 }
 
 type backend struct {
@@ -73,14 +74,26 @@ type backend struct {
 	agents *AgentManager
 }
 
-func runDispatcher(events *store.EventReciever) {
+func (b *backend) runDispatcher(events *store.EventReciever) {
 	for {
 		select {
-		case msg := <-events.PutMessage:
-			log.Info("message recieved: %+v", msg)
+		case evt := <-events.PutMessage:
+			log.Info("message recieved: %+v", evt)
 			// TODO
+
 			// 1. find sessions(UserAgent) that member of channel
+			channel, err := b.Store.GetChannel(evt.ChannelID)
+			if err != nil {
+				logrus.Warn(err)
+				break
+			}
 			// 2. send message to them
+			for m := range channel.Member {
+				b.agents.Get(m).ForEach(func(agent Agent) error {
+					agent.OnMessage(evt.ChannelID, evt.Message)
+					return nil
+				})
+			}
 		}
 	}
 }

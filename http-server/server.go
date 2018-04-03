@@ -25,6 +25,8 @@ func Run(conf *Config, b backend.Backend) error {
 	app.GET("/register", server.static("text/html", "html/register.html"))
 	app.POST("/register", server.register)
 
+	app.GET("/ws", server.CheckAuth, server.ws)
+
 	v1 := app.Group("/api/v1", server.CheckAuth)
 	{
 		v1.GET("/channels", server.getChannels)
@@ -37,6 +39,10 @@ func Run(conf *Config, b backend.Backend) error {
 
 		//v1.GET("/user/:username", server.getUserInfo)
 		v1.GET("/users/:username/joinned-channel", server.joinnedChannel)
+
+		// Messages
+		v1.GET("/channels/:channelID/messages", server.getMessage)
+		v1.POST("/channels/:channelID/messages", server.postMessage)
 	}
 
 	return app.Run(conf.Bind)

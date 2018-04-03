@@ -1,0 +1,28 @@
+<template>
+	<style>
+	@import url("/static/css/color.css");
+	@import url("/static/css/reset.css");
+
+	:host {
+	}
+	</style>
+	<slot name="time"></slot>
+	<slot name="auth"></slot>
+	<slot name="text"></slot>
+</template>
+<script>
+(function(template){
+	class ZumoMessage extends HTMLElement {
+		constructor() {
+			// this   mean outside of shadow dom
+			// shadow mean inside  of shadow dom
+			super();
+
+			var clone = document.importNode(template.content, true)
+			var shadow = this["--shadow"] = this.attachShadow({mode: 'open'})
+			shadow.appendChild(clone);
+		}
+	}
+	customElements.define("zumo-message", ZumoMessage);
+})(document.currentScript.ownerDocument.querySelector('template'))
+</script>

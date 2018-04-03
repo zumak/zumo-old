@@ -38,8 +38,8 @@
 			var shadow = this["--shadow"] = this.attachShadow({mode: 'open'})
 			shadow.appendChild(clone);
 
-			shadow.addEventListener("submit", this._submit.bind(this));
-			shadow.addEventListener("reset", this._cancel.bind(this));
+			shadow.on("submit", this._submit.bind(this));
+			shadow.on("reset", this._cancel.bind(this));
 			//shadow.querySelector(".cancel").addEventListener("click",  this._cancel.bind(this));
 		}
 
