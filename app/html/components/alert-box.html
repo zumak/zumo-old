@@ -39,7 +39,7 @@
 </template>
 <script>
 (function(template){
-	class ZumoMessageBox extends HTMLElement {
+	class ZumoAlertBox extends HTMLElement {
 		constructor() {
 			// this   mean outside of shadow dom
 			// shadow mean inside  of shadow dom
@@ -74,6 +74,6 @@
 			this["--shadow"].appendChild(box);
 		}
 	}
-	customElements.define("zumo-message-box", ZumoMessageBox);
+	customElements.define("zumo-alert-box", ZumoAlertBox);
 })(document.currentScript.ownerDocument.querySelector('template'))
 </script>

@@ -1,8 +1,6 @@
 //import $ from "/static/js/minilib.js";
 //$._registerGlobal(); // load lib first, for custom element
 
-var messageBox = $.get("zumo-message-box");
-//messageBox.info("test");
 
 $.get("zumo-channel-list").on("change-channel", function(evt){
 	//var channelId = evt.details.ID;
@@ -23,31 +21,31 @@ $.get("zumo-dialog.create-channel").on("ok", async function(evt){
 			}
 		});
 		console.log("create channel", name)
-		$.get("zumo-message-box").info(`${name} channel created!`);
+		$.get("zumo-alert-box").info(`${name} channel created!`);
 		this.hide();
 		this.clear();
 	} catch(e) {
 		// TODO show error message
 		console.warn("error on create channel", name)
-		$.get("zumo-message-box").error("error on create channel!");
+		$.get("zumo-alert-box").error("error on create channel!");
 		this.hide();
 	}
 }).on("cancel", function(){
 	$.get(this, "input[type=text]").value = "";
 	this.hide();
-	$.get("zumo-message-box").info("create channel canceled");
+	$.get("zumo-alert-box").info("create channel canceled");
 });
 $.get("zumo-dialog.create-bot").on("ok", async function(evt){
 	var name = $.get(this, "input[name=name]").value.trim();
 	var driver = $.get(this, "input[name=driver]").value.trim();
 
 	if (name == "") {
-		$.get("zumo-message-box").error("name is blank");
+		$.get("zumo-alert-box").error("name is blank");
 		return
 	}
 
 	if (driver == "") {
-		$.get("zumo-message-box").error("driver is blank");
+		$.get("zumo-alert-box").error("driver is blank");
 		return
 	}
 
@@ -58,15 +56,15 @@ $.get("zumo-dialog.create-bot").on("ok", async function(evt){
 				Driver: driver,
 			}
 		});
-		$.get("zumo-message-box").info("bot created");
+		$.get("zumo-alert-box").info("bot created");
 		this.hide()
 	} catch(e) {
-		$.get("zumo-message-box").error("failed", e);
+		$.get("zumo-alert-box").error("failed", e);
 		this.hide()
 	}
 
 }).on("cancel", function(){
-	$.get("zumo-message-box").info("create bot canceled");
+	$.get("zumo-alert-box").info("create bot canceled");
 	this.hide();
 });
 
@@ -90,10 +88,10 @@ $.get("zumo-dialog.join-channel").on("ok", async function() {
 		var channelID = $.get(this, "select").value
 		await $.request("PUT", `/api/v1/channels/${channelID}/join`, {})
 		this.hide();
-		$.get("zumo-message-box").info("join channel");
+		$.get("zumo-alert-box").info("join channel");
 	} catch(e) {
 		this.hide();
-		$.get("zumo-message-box").error("join channel failed");
+		$.get("zumo-alert-box").error("join channel failed");
 	}
 }).on("cancel", function(){
 	this.hide();
@@ -108,7 +106,7 @@ $.get("button.logout").on("click", async function() {
 			}
 		});
 	} catch(e) {
-		//$.get("zumo-message-box").error("Error on Logout");
+		//$.get("zumo-alert-box").error("Error on Logout");
 	}
 	document.location = "/"
 })
@@ -127,6 +125,5 @@ window.onload = function() {
 	$.get("zumo-socket").connect();
 	$.get("zumo-socket").on("message", function() {
 		console.log(arguments)
-		//$.get("zumo-message-box").appendMessage();
 	});
 }
