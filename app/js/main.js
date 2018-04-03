@@ -7,6 +7,7 @@ $.get("zumo-channel-list").on("change-channel", function(evt){
 	var channelId = evt.detail.ID;
 	$.get("zumo-input-box").attr("channel-id", channelId);
 	$.get(".channel-header h2").innerHTML = evt.detail.Name;
+	$.get("zumo-messages").load(channelId);
 });
 
 $.get("button.create-channel").on("click", async function() {
@@ -109,7 +110,7 @@ $.get("button.logout").on("click", async function() {
 		//$.get("zumo-alert-box").error("Error on Logout");
 	}
 	document.location = "/"
-})
+});
 
 $.get("zumo-menu.application").on("menu", function(e) {
 	switch(e.detail.name) {
@@ -118,12 +119,12 @@ $.get("zumo-menu.application").on("menu", function(e) {
 			this.hide();
 			break;
 	}
-})
+});
 
 window.onload = function() {
 	$.get("zumo-channel-list").load();
 	$.get("zumo-socket").connect();
-	$.get("zumo-socket").on("message", function() {
-		console.log(arguments)
+	$.get("zumo-socket").on("message", function(evt) {
+		$.get("zumo-messages").appendText(evt.detail);
 	});
 }

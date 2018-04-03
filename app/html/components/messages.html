@@ -5,9 +5,13 @@
 	@import url("/static/css/reset.css");
 
 	:host {
+		overflow: scroll;
+		contain: size;
 	}
 	:host ul {
-
+		margin: 0px;
+		padding: 0px;
+		list-style: none;
 	}
 
 	</style>
@@ -32,12 +36,20 @@
 		appendText(msg) {
 			var html = `
 			<zumo-message>
-				<span slot="time">${msg.Time}<span>
+				<span slot="auth">${msg.Sender}</span>
 				<span slot="text">${msg.Text}</span>
-				<span slot="auth">${msg.Auth}</span>
+				<span slot="time">${msg.Time}<span>
 			</zumo-message>`
 
 			var $li = $.create("li", {$html: html})
+			$.get(this["--shadow"], "ul").appendChild($li);
+		}
+		async load(channelId) {
+			var res = await $.request("GET", `/api/v1/channels/${channelId}/messages`)
+			var that = this;
+			res.json.forEach(function(e) {
+				that.appendText(e)
+			});
 		}
 	}
 	customElements.define("zumo-messages", ZumoMessages);

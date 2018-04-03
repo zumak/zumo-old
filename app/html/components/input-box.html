@@ -58,16 +58,21 @@
 			var that = this;
 			$.get(shadow, "form").on("submit", $.prevent(this._send.bind(this)))
 		}
-		_send() {
+		async _send() {
 			var channelID = this.attr("channel-id");
 			var text = $.get(this["--shadow"], "input[name=text]").value;
 
-			$.request("POST",`/api/v1/channels/${channelID}/messages`, {
-				body: {
-					Text: text,
-					Detail: {},
-				}
-			});
+			try {
+				var res = await $.request("POST",`/api/v1/channels/${channelID}/messages`, {
+					body: {
+						Text: text,
+						Detail: {},
+					}
+				});
+			} catch (e) {
+				console.warn(e)
+				$.get("zumo-alert-box").warn(e.json.msg)
+			}
 		}
 	}
 	customElements.define("zumo-input-box", ZumoInputBox);

@@ -42,12 +42,18 @@
 
 			this._socket.on("open", this._emit.bind(this, "open"));
 			this._socket.on("close", this._reciveClose.bind(this));
-			this._socket.on("message", this._emit.bind(this, "message"));
+			this._socket.on("message", this._onMessage.bind(this));
 			this._socket.on("error", this._emit.bind(this, "error"));
 		}
 		async _reciveClose(){
 			await $.timeout(500); // wait 500ms
 			this._tryConnect();
+		}
+		_onMessage(event) {
+			var e = new CustomEvent("message", {
+				detail: JSON.parse(event.data),
+			});
+			this.dispatchEvent(e);
 		}
 	}
 	customElements.define("zumo-socket", ZumoSocket);

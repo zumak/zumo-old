@@ -47,8 +47,13 @@ section.channel-header {
 		flex-grow: 1;
 	}
 }
-section.contents {
+section.messages {
 	grid-area: contents;
+	display: flex;
+	flex-flow: row nowrap;
+	zumo-messages {
+		flex-grow: 1;
+	}
 }
 section.input-box {
 	grid-area: input-box;
