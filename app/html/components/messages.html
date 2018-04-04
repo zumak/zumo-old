@@ -50,6 +50,12 @@
 			res.json.forEach(function(e) {
 				that.appendText(e)
 			});
+			var html = this["--shadow"];
+
+			this.scrollToEnd()
+		}
+		scrollToEnd(){
+			this.scrollTop = this.scrollHeight - this.clientHeight;
 		}
 	}
 	customElements.define("zumo-messages", ZumoMessages);

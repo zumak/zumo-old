@@ -126,5 +126,6 @@ window.onload = function() {
 	$.get("zumo-socket").connect();
 	$.get("zumo-socket").on("message", function(evt) {
 		$.get("zumo-messages").appendText(evt.detail);
+		$.get("zumo-messages").scrollToEnd();
 	});
 }
