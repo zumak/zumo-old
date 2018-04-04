@@ -25,7 +25,7 @@ $.get("zumo-menu#channel-menu").on("leave", function(){
 		display: none;
 
 		position: absolute;
-		right: 0rem;
+		left: 0rem;
 		top: 100%;
 
 		background: var(--default-background);
@@ -36,7 +36,13 @@ $.get("zumo-menu#channel-menu").on("leave", function(){
 		padding: 0.5rem;
 		margin: 0rem;
 	}
-	:host[dir=up] {
+	:host([dir=up]) ul {
+		top: unset;
+		bottom: 100%;
+	}
+	:host([arrange=end]) ul {
+		left: unset;
+		right: 0rem;
 	}
 	ul.show {
 		display: block;
