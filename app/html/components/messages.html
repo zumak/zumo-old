@@ -47,7 +47,7 @@
 		async load(channelId) {
 			var res = await $.request("GET", `/api/v1/channels/${channelId}/messages`)
 			var that = this;
-			res.json.forEach(function(e) {
+			res.json.sort((a, b) => a.Time.localeCompare(b.Time)).forEach(function(e) {
 				that.appendText(e)
 			});
 			var html = this["--shadow"];

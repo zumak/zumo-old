@@ -35,6 +35,7 @@ func (b *backend) Token(tokenStr string) (*datatypes.Token, error) {
 	if tokenStr[:6] != "Basic " {
 		return nil, errors.Errorf("Not collect token type")
 	}
+
 	// TODO make shortcuts for API eg) 'token {{user}}:{{hashed_key}}'
 
 	buf, err := base64.StdEncoding.DecodeString(tokenStr[6:])
