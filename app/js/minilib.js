@@ -167,6 +167,14 @@ var $ = (function(){
 		"map": Array.prototype.map,
 		//"forEach": Array.prototype.forEach,
 	});
+	extend(Array, {
+		"all": function all() { return Promise.all(this); },
+		"race": function race() { return Promise.race(this); },
+
+		// with the lovely addiction of ...
+		"any": function any() { return Promise.any(this); },
+	});
+
 	return $;
 })()
 
