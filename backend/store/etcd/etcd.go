@@ -30,6 +30,7 @@ func New(emmiter *store.EventEmitter, endpoint string, opt map[string]string) (s
 	})
 	if err != nil {
 		// handle error!
+		return nil, err
 	}
 
 	go watchInit(cli, emmiter)

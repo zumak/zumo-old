@@ -8,7 +8,6 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/zumak/zumo/datatypes"
-	"github.com/zumak/zumo/utils"
 )
 
 func (b *backend) CreateToken(username, unhashedKey string) (*datatypes.Token, error) {
@@ -16,12 +15,10 @@ func (b *backend) CreateToken(username, unhashedKey string) (*datatypes.Token, e
 	if len(unhashedKey) < 8 {
 		return nil, errors.Errorf("Token too short")
 	}
-	salt := utils.RandomString(16)
 
 	token := &datatypes.Token{
 		Username:  username,
-		HashedKey: hash(unhashedKey + salt),
-		Salt:      salt,
+		HashedKey: hashWithSalt(unhashedKey),
 	}
 
 	token, err := b.Store.PutToken(token)
@@ -48,17 +45,14 @@ func (b *backend) Token(tokenStr string) (*datatypes.Token, error) {
 		return nil, errors.Errorf("Not enought argument")
 	}
 
-	//return b.Store.GetToken(arr[0], hash(arr[1]))
-	tokens, err := b.Store.FindToken(arr[0])
-	for _, token := range tokens {
-		if token.HashedKey == hash(arr[1]+token.Salt) {
-			return &token, nil
-		}
-	}
-	return nil, errors.Errorf("Token not found")
+	return b.Store.GetToken(arr[0], hashWithSalt(arr[1]))
 }
 
 func hash(str string) string {
 	hashed := crypto.SHA512.New().Sum([]byte(str))
 	return hex.EncodeToString(hashed)
+}
+func hashWithSalt(unhashedKey string) string {
+	salt := hash(unhashedKey)
+	return hash(salt[:512] + unhashedKey + salt[512:])
 }
