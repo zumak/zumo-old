@@ -4,6 +4,7 @@ import (
 	"crypto"
 	"encoding/base64"
 	"encoding/hex"
+	"io"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -49,10 +50,11 @@ func (b *backend) Token(tokenStr string) (*datatypes.Token, error) {
 }
 
 func hash(str string) string {
-	hashed := crypto.SHA512.New().Sum([]byte(str))
-	return hex.EncodeToString(hashed)
+	hashed := crypto.SHA512.New()
+	io.WriteString(hashed, str)
+	return hex.EncodeToString(hashed.Sum(nil))
 }
 func hashWithSalt(unhashedKey string) string {
 	salt := hash(unhashedKey)
-	return hash(salt[:512] + unhashedKey + salt[512:])
+	return hash(salt[:64] + unhashedKey + salt[64:])
 }
